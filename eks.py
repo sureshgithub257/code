@@ -3,6 +3,28 @@ import boto3
 
 import boto3
 
+
+
+def get_cidr_for_subnet(ec2_client, subnet_id):
+    try:
+        # Describe the specified subnet
+        response = ec2_client.describe_subnets(SubnetIds=[subnet_id])
+        subnets = response['Subnets']
+        
+        if not subnets:
+            raise ValueError(f"No subnet found with ID: {subnet_id}")
+        
+        # Extract the CIDR block from the subnet details
+        cidr_block = subnets[0]['CidrBlock']
+        return cidr_block
+    
+    except Exception as e:
+        print(f"Error retrieving CIDR block: {e}")
+        return None
+
+
+
+
 def get_eks_nodegroup_instances(eks_client, ec2_client, cluster_name, nodegroup_name):
     # Get details of the specified node group
     response = eks_client.describe_nodegroup(clusterName=cluster_name, nodegroupName=nodegroup_name)
