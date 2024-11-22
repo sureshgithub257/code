@@ -1,0 +1,9 @@
+kubectl get virtualservice -A -o json | jq -r '
+  .items[] | 
+  .metadata.namespace as $ns | 
+  .metadata.name as $vs | 
+  .spec.hosts[] as $host | 
+  .spec.http[]?.route[].destination?.host as $destination | 
+  .spec.http[]?.match[]?.uri as $uri | 
+  [$ns, $vs, $host, $uri?.exact // $uri?.prefix // ""] | 
+  @tsv' | column -t
