@@ -1,0 +1,1 @@
+curl -X GET http://<prometheus-server>/api/v1/query --data-urlencode 'query=node_memory_MemFree_bytes'
