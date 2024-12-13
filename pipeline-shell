@@ -1,0 +1,29 @@
+pipeline {
+    agent none
+    parameters {
+        string(name: 'ENVIRONMENT', defaultValue: 'dev', description: 'Environment (e.g., dev, prod)')
+        string(name: 'REGION', defaultValue: 'us-east', description: 'Region (e.g., us-east, us-west)')
+    }
+    stages {
+        stage('Run on Specific Agent') {
+            agent {
+                label "${params.ENVIRONMENT}-${params.REGION}"
+            }
+            steps {
+                script {
+                    // Define the shell script as a multiline string
+                    def shellScript = '''
+                    echo "Starting deployment"
+                    echo "Environment: ${ENVIRONMENT}"
+                    echo "Region: ${REGION}"
+                    echo "Running tasks..."
+                    # Add your actual commands here
+                    echo "Deployment complete"
+                    '''
+                    // Run the shell script
+                    sh shellScript
+                }
+            }
+        }
+    }
+}
